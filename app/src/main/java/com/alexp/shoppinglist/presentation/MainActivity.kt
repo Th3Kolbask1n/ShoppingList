@@ -10,22 +10,21 @@ import com.alexp.shoppinglist.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
+    private var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        viewModel.shopList.observe(this, object:Observer<List<ShopItem>>
-        {
-            override fun onChanged(value: List<ShopItem>) {
-                TODO("Not yet implemented")
-            }
-
-        })
         viewModel.shopList.observe(this){
 
             Log.d("MainActivity2", it.toString())
+            if(count ==0){
+            viewModel.deleteShopItem(it[0])
+
+                count++}
         }
-        viewModel.getShopList()
+
+
     }
 }
