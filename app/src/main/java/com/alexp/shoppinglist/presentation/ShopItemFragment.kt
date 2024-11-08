@@ -1,5 +1,6 @@
 package com.alexp.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,7 +18,7 @@ import com.alexp.shoppinglist.R
 class ShopItemFragment : Fragment(){
 
     private lateinit var viewModel: ShopItemViewModel
-
+    public lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private lateinit var tilName : TextInputLayout
     private lateinit var tilCount : TextInputLayout
     private lateinit var etName: EditText
@@ -52,6 +53,20 @@ class ShopItemFragment : Fragment(){
 
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if(context is OnEditingFinishedListener)
+        {
+            onEditingFinishedListener = context
+        }
+        else
+        {
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+
+    }
+
     private fun observeViewModel()
     {
         viewModel.errorInputCount.observe(viewLifecycleOwner){
@@ -79,7 +94,7 @@ class ShopItemFragment : Fragment(){
         }
         viewModel.isCanCloseScreen.observe(viewLifecycleOwner)
         {
-            activity?.onBackPressed()
+            onEditingFinishedListener?.onEditingFinish()
         }
     }
     private fun launchRightMode()
@@ -199,5 +214,10 @@ class ShopItemFragment : Fragment(){
                 }
             }
         }
+    }
+
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinish()
     }
 }

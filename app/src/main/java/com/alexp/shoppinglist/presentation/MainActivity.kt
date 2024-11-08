@@ -1,6 +1,7 @@
 package com.alexp.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainer
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alexp.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
     private var shopItemContainer : FragmentContainerView? = null
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
             else
             {
+
                 launchFragment(ShopItemFragment.newIntenAddItem())
             }
         }
@@ -118,6 +120,11 @@ class MainActivity : AppCompatActivity() {
                 launchFragment(ShopItemFragment.newIntenEditItem(it.id))
             }
         }
+    }
+
+    override fun onEditingFinish() {
+        Toast.makeText(this@MainActivity,"Success",Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 
     private fun setupLongClickListener() {

@@ -16,9 +16,9 @@ import com.alexp.shopinglist.domain.ShopItem
 import com.alexp.shoppinglist.R
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-//    private lateinit var viewModel: ShopItemViewModel
+    //    private lateinit var viewModel: ShopItemViewModel
 //
 //    private lateinit var tilName : TextInputLayout
 //    private lateinit var tilCount : TextInputLayout
@@ -32,7 +32,7 @@ class ShopItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_shop_item)
         val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
         parseIntent()
-        if(savedInstanceState==null)
+//        if(savedInstanceState==null)
 //        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 //        initViews()
 //        addTextChangeListeners();
@@ -158,6 +158,10 @@ class ShopItemActivity : AppCompatActivity() {
 
 
     }
+    override fun onEditingFinish() {
+        finish()
+    }
+
     companion object {
 
         private const val EXTRA_SCREEN_MODE = "extra_mode"
