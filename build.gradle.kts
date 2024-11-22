@@ -2,4 +2,6 @@
 plugins {
     id("com.android.application") version "8.6.1" apply false
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+    id("androidx.room") version "2.6.0" apply false
+
 }
