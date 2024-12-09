@@ -12,13 +12,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alexp.shoppinglist.R
 import com.alexp.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
     private lateinit var binding : ActivityMainBinding
 
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (application as ShopApplication).component
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        component.inject(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -27,7 +39,7 @@ class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListe
 
         setupRecyclerView()
 
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
 
         viewModel.shopList.observe(this) {
 

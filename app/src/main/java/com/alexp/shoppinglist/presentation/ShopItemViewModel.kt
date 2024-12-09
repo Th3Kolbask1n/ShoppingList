@@ -16,15 +16,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUserCase: GetShopItemUseCase,
+    private val addShopItemUseCase: AddShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase
 
+) : ViewModel() {
 
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getSgopItemUserCase = GetShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val _errorInputName = MutableLiveData<Boolean>()
 
     val errorInputName: LiveData<Boolean>
@@ -42,7 +42,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
 
     fun getShopItem(shopItemId: Int) {
         viewModelScope.launch {
-            val item = getSgopItemUserCase.getShopItem(shopItemId)
+            val item = getShopItemUserCase.getShopItem(shopItemId)
             _shopItem.value = item
         }
 
@@ -53,11 +53,11 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         get() = _isCanCloseScreen
 
     fun addShopItem(inputName: String?, inputCount: String?) {
-            val name = parseName(inputName)
-            val count = parseCount(inputCount)
-            val fieldValid = validateInput(name, count)
-            if (fieldValid) {
-                viewModelScope.launch {
+        val name = parseName(inputName)
+        val count = parseCount(inputCount)
+        val fieldValid = validateInput(name, count)
+        if (fieldValid) {
+            viewModelScope.launch {
 
                 val shopItem = ShopItem(name, count, true)
                 addShopItemUseCase.addShopItem(shopItem)
@@ -68,11 +68,11 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun editShopItem(inputName: String?, inputCount: String?) {
-            val name = parseName(inputName)
-            val count = parseCount(inputCount)
-            val fieldValid = validateInput(name, count)
-            if (fieldValid) {
-                viewModelScope.launch {
+        val name = parseName(inputName)
+        val count = parseCount(inputCount)
+        val fieldValid = validateInput(name, count)
+        if (fieldValid) {
+            viewModelScope.launch {
 
                 _shopItem.value?.let {
                     val item = it.copy(name = name, count = count)

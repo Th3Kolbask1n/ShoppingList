@@ -9,21 +9,13 @@ import androidx.lifecycle.map
 import com.alexp.shopinglist.domain.ShopItem
 import com.alexp.shopinglist.domain.ShopListRepository
 import java.lang.RuntimeException
+import javax.inject.Inject
 import kotlin.random.Random
 
-class ShopListRepositoryImpl(
-    application: Application
+class ShopListRepositoryImpl @Inject constructor(
+    private val shopListDao: ShopListDao,
+    private val mapper : ShopListMapper,
 ) : ShopListRepository {
-
-    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
-    private val shopListLD = MutableLiveData<List<ShopItem>>()
-    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
-    private val mapper = ShopListMapper()
-    private var autoIncrementId = 0
-
-    init {
-
-    }
 
     override suspend fun addShopItem(shopItem: ShopItem) {
         shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
